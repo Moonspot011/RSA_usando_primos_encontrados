@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  nodo-01:
+    build: .
+    container_name: nodo-01
+    network_mode: "host"
+    command: python run_node.py nodo-01 9991
+    restart: unless-stopped
+
+  nodo-02:
+    build: .
+    container_name: nodo-02
+    network_mode: "host"
+    command: python run_node.py nodo-02 9992
+    restart: unless-stopped
+
+  nodo-03:
+    build: .
+    container_name: nodo-03
+    network_mode: "host"
+    command: python run_node.py nodo-03 9993
+    restart: unless-stopped

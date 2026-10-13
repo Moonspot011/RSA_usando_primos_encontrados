@@ -19,6 +19,11 @@ class TaskManager:
             logging.warning(f"[TASK] No hay nodos aptos para la tarea {task.task_id}")
             return False
 
+        if not target_node.public_key:
+            logging.warning(f"[CRYPTO] {target_node.node_id} aún no publica su clave pública; "
+                            f"no se envía la tarea {task.task_id}")
+            return False
+
         task.assigned_to = target_node.node_id
         task.status = "RUNNING"
         
@@ -36,7 +41,7 @@ class TaskManager:
                 "parameters": task.params
             }
         }
-        self.messaging.send_json(target_node.ip, target_node.port, msg)
+        self.messaging.send_secure(target_node.ip, target_node.port, msg, target_node.public_key)
         return True
 
     def check_and_reassign_failed_tasks(self):

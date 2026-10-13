@@ -7,11 +7,12 @@ from src.resource_manager import ResourceManager
 class DiscoveryService:
     """Maneja el descubrimiento automático y la detección de fallos."""
     
-    def __init__(self, node_id, port, known_ports, messaging_service):
+    def __init__(self, node_id, port, known_ports, messaging_service, public_key=None):
         self.node_id = node_id
         self.port = port
         self.known_ports = known_ports
         self.messaging = messaging_service
+        self.public_key = public_key  # clave pública local, se publica en cada beacon
         self.peer_table = {}  # node_id -> NodeInfo
         self.running = False
 
@@ -33,7 +34,8 @@ class DiscoveryService:
                 "payload": {
                     "port": self.port,
                     "cpu_free_pct": resources["cpu_free_pct"],
-                    "ram_free_mb": resources["ram_free_mb"]
+                    "ram_free_mb": resources["ram_free_mb"],
+                    "public_key": self.public_key
                 }
             }
             for target_port in self.known_ports:
@@ -47,14 +49,16 @@ class DiscoveryService:
         port = payload["port"]
         cpu_free = payload["cpu_free_pct"]
         ram_free = payload["ram_free_mb"]
+        public_key = payload.get("public_key")
 
         if sender_id not in self.peer_table:
             logging.info(f"[DISCOVERY] Nuevo nodo descubierto: {sender_id} en puerto {port}")
-            self.peer_table[sender_id] = NodeInfo(sender_id, ip, port, cpu_free, ram_free)
+            self.peer_table[sender_id] = NodeInfo(sender_id, ip, port, cpu_free, ram_free, public_key)
         else:
             peer = self.peer_table[sender_id]
             peer.cpu_free = cpu_free
             peer.ram_free = ram_free
+            peer.public_key = public_key  # se actualiza por si el nodo reinició con llaves nuevas
             peer.last_seen = time.time()
             
             if peer.status == "OFFLINE":

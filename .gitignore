@@ -1,0 +1,29 @@
+# --- Caché y bytecode de Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Cachés de herramientas ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+
+# --- Entornos virtuales ---
+venv/
+.venv/
+env/
+ENV/
+# Estructura de venv de Windows (venía dentro del zip original)
+Lib/
+Scripts/
+Include/
+pyvenv.cfg
+
+# --- Editores / sistema ---
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

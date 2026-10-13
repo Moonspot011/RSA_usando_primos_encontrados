@@ -2,12 +2,13 @@ import time
 
 class NodeInfo:
     """Representa la información de un vecino en la red."""
-    def __init__(self, node_id, ip, port, cpu_free, ram_free):
+    def __init__(self, node_id, ip, port, cpu_free, ram_free, public_key=None):
         self.node_id = node_id
         self.ip = ip
         self.port = port
         self.cpu_free = cpu_free
         self.ram_free = ram_free
+        self.public_key = public_key  # clave pública (RSA/ElGamal) publicada en el beacon
         self.last_seen = time.time()
         self.status = "ONLINE"
 

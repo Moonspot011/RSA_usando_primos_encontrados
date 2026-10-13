@@ -2,6 +2,7 @@
 
 Sistema distribuido de 3 nodos que se descubren entre sí, se reparten tareas de IA según los recursos disponibles de cada uno y **se comunican de forma cifrada** con RSA o ElGamal, usando números primos aleatorios de 40 dígitos generados por cada nodo.
 
+> **Nota:** las llaves de 40 dígitos (~260 bits) son **didácticas**. Se factorizan en segundos; para un uso real se necesitan llaves de 2048 bits o más y relleno OAEP.
 
 ---
 

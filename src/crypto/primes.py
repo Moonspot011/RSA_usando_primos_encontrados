@@ -72,20 +72,27 @@ def generar_tecnica_2(digitos=DIGITOS_PRIMO):
     return int(primero + resto)
 
 
-_contador_lcg = 0
+# Estado del LCG: se siembra UNA vez con la estampa de tiempo y luego avanza en cada llamada.
+_LCG_A = 6364136223846793005    # multiplicador (a ≡ 1 mod 4)
+_LCG_C = 1442695040888963407    # incremento impar  -> periodo completo con módulo 2^k (Hull-Dobell)
+_LCG_M = 2 ** 136               # módulo > 10^40, así cubre todo el rango de 40 dígitos
+_estado_lcg = None
 
 
 def generar_tecnica_3(digitos=DIGITOS_PRIMO):
     """
-    TÉCNICA 3: Generador Congruencial Lineal sobre la estampa de tiempo.
-    X(n+1) = (a * X(n) + c) mod m  con a=1103515245, c=12345, m=2^31.
+    TÉCNICA 3: Generador Congruencial Lineal (LCG) sembrado con la estampa de tiempo.
+    X(n+1) = (a * X(n) + c) mod m   con m = 2^136.
+    El estado se siembra una vez con time.time_ns() y avanza en cada llamada.
     """
-    global _contador_lcg
-    _contador_lcg += 1
+    global _estado_lcg
+    if _estado_lcg is None:
+        _estado_lcg = time.time_ns() % _LCG_M
+        for _ in range(20):  # calentamiento: el estado inicial es pequeño y aún no "llena" los 136 bits
+            _estado_lcg = (_LCG_A * _estado_lcg + _LCG_C) % _LCG_M
 
-    semilla = int(time.time() * 1000) + _contador_lcg
-    semilla = (semilla * 1103515245 + 12345) % (2 ** 31)
+    _estado_lcg = (_LCG_A * _estado_lcg + _LCG_C) % _LCG_M
 
     minimo = 10 ** (digitos - 1)
-    rango = (10 ** digitos - 1) - minimo
-    return minimo + (semilla * 999999999) % rango
+    rango = 10 ** digitos - minimo  # 9 * 10^(digitos-1) valores posibles
+    return minimo + _estado_lcg % rango

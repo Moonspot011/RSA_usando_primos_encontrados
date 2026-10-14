@@ -14,6 +14,14 @@ import random
 from src.crypto.primes import generar_primo, DIGITOS_PRIMO
 
 _rng = random.SystemRandom()
+
+
+def _fuente_aleatoria(digitos):
+    """Fuente de primos por defecto: genera primos nuevos con Miller-Rabin."""
+    while True:
+        yield generar_primo(digitos)
+
+
 MARCADOR = b"\x01"  # byte inicial de cada bloque: evita perder ceros a la izquierda
 
 
@@ -45,10 +53,12 @@ class RSA:
     """
     algo = "rsa"
 
-    def __init__(self, digitos=DIGITOS_PRIMO):
+    def __init__(self, digitos=DIGITOS_PRIMO, fuente=None):
+        # `fuente` es un iterador de primos (p. ej. el lote de primos hallados)
+        fuente = fuente if fuente is not None else _fuente_aleatoria(digitos)
         e = 65537
         while True:
-            p, q = generar_primo(digitos), generar_primo(digitos)
+            p, q = next(fuente), next(fuente)
             phi = (p - 1) * (q - 1)
             if p != q and math.gcd(e, phi) == 1:
                 break
@@ -78,8 +88,9 @@ class ElGamal:
     """
     algo = "elgamal"
 
-    def __init__(self, digitos=DIGITOS_PRIMO):
-        self.p = generar_primo(digitos)
+    def __init__(self, digitos=DIGITOS_PRIMO, fuente=None):
+        fuente = fuente if fuente is not None else _fuente_aleatoria(digitos)
+        self.p = next(fuente)
         self.g = 2
         self._x = _rng.randint(2, self.p - 2)  # clave privada
         self.y = pow(self.g, self._x, self.p)
@@ -110,12 +121,15 @@ class ElGamal:
 ALGORITMOS = {"rsa": RSA, "elgamal": ElGamal}
 
 
-def crear_cripto(algo="rsa", digitos=DIGITOS_PRIMO):
-    """Crea un criptosistema con un par de llaves nuevo ('rsa' o 'elgamal')."""
+def crear_cripto(algo="rsa", digitos=DIGITOS_PRIMO, fuente=None):
+    """
+    Crea un criptosistema con un par de llaves nuevo ('rsa' o 'elgamal').
+    Si se pasa `fuente` (iterador de primos), p y q se toman de ahí; si no, se generan.
+    """
     clase = ALGORITMOS.get(str(algo).lower())
     if clase is None:
         raise ValueError(f"Algoritmo desconocido '{algo}'. Usa: {list(ALGORITMOS)}")
-    return clase(digitos)
+    return clase(digitos, fuente)
 
 
 def cifrar_para(clave_publica, datos):

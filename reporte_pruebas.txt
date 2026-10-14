@@ -1,0 +1,42 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+rootdir: /tmp/project
+collecting ... collected 35 items
+
+tests/test_cifrado.py::test_es_primo_valores_conocidos PASSED            [  2%]
+tests/test_cifrado.py::test_tecnicas_generan_numeros_de_40_cifras[generar_tecnica_1] PASSED [  5%]
+tests/test_cifrado.py::test_tecnicas_generan_numeros_de_40_cifras[generar_tecnica_2] PASSED [  8%]
+tests/test_cifrado.py::test_tecnicas_generan_numeros_de_40_cifras[generar_tecnica_3] PASSED [ 11%]
+tests/test_cifrado.py::test_tecnicas_aceptan_otra_cantidad_de_cifras PASSED [ 14%]
+tests/test_cifrado.py::test_generar_primo_devuelve_primos_de_40_cifras PASSED [ 17%]
+tests/test_cifrado.py::test_lote_guardar_y_cargar PASSED                 [ 20%]
+tests/test_cifrado.py::test_cargar_lote_descarta_numeros_no_primos PASSED [ 22%]
+tests/test_cifrado.py::test_semilla_usa_anio_mes_dia_hora_minuto_y_nodo PASSED [ 25%]
+tests/test_cifrado.py::test_seleccion_es_reproducible_y_sin_repetidos PASSED [ 28%]
+tests/test_cifrado.py::test_nodos_en_el_mismo_minuto_obtienen_primos_distintos PASSED [ 31%]
+tests/test_cifrado.py::test_distinto_minuto_cambia_la_seleccion PASSED   [ 34%]
+tests/test_cifrado.py::test_llaves_se_construyen_con_primos_del_lote[rsa] PASSED [ 37%]
+tests/test_cifrado.py::test_llaves_se_construyen_con_primos_del_lote[elgamal] PASSED [ 40%]
+tests/test_cifrado.py::test_cifrado_de_numeros[rsa] PASSED               [ 42%]
+tests/test_cifrado.py::test_cifrado_de_numeros[elgamal] PASSED           [ 45%]
+tests/test_cifrado.py::test_cifrado_de_mensajes[1_caracter-rsa] PASSED   [ 48%]
+tests/test_cifrado.py::test_cifrado_de_mensajes[1_caracter-elgamal] PASSED [ 51%]
+tests/test_cifrado.py::test_cifrado_de_mensajes[texto_con_tilde-rsa] PASSED [ 54%]
+tests/test_cifrado.py::test_cifrado_de_mensajes[texto_con_tilde-elgamal] PASSED [ 57%]
+tests/test_cifrado.py::test_cifrado_de_mensajes[unicode_y_emojis-rsa] PASSED [ 60%]
+tests/test_cifrado.py::test_cifrado_de_mensajes[unicode_y_emojis-elgamal] PASSED [ 62%]
+tests/test_cifrado.py::test_cifrado_de_mensajes[2000_caracteres-rsa] PASSED [ 65%]
+tests/test_cifrado.py::test_cifrado_de_mensajes[2000_caracteres-elgamal] PASSED [ 68%]
+tests/test_cifrado.py::test_cifrado_de_mensajes[json_de_tarea-rsa] PASSED [ 71%]
+tests/test_cifrado.py::test_cifrado_de_mensajes[json_de_tarea-elgamal] PASSED [ 74%]
+tests/test_cifrado.py::test_el_cifrado_no_deja_el_texto_a_la_vista[rsa] PASSED [ 77%]
+tests/test_cifrado.py::test_el_cifrado_no_deja_el_texto_a_la_vista[elgamal] PASSED [ 80%]
+tests/test_cifrado.py::test_llave_equivocada_no_descifra[rsa] PASSED     [ 82%]
+tests/test_cifrado.py::test_llave_equivocada_no_descifra[elgamal] PASSED [ 85%]
+tests/test_cifrado.py::test_mensaje_alterado_no_se_recupera[rsa] PASSED  [ 88%]
+tests/test_cifrado.py::test_mensaje_alterado_no_se_recupera[elgamal] PASSED [ 91%]
+tests/test_cifrado.py::test_elgamal_cifra_distinto_cada_vez PASSED       [ 94%]
+tests/test_cifrado.py::test_mensaje_cifrado_por_udp[rsa] PASSED          [ 97%]
+tests/test_cifrado.py::test_mensaje_cifrado_por_udp[elgamal] PASSED      [100%]
+
+============================== 35 passed in 0.79s ==============================

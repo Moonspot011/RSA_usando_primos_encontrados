@@ -7,6 +7,7 @@ from src.scheduler import DistributedScheduler
 from src.task_manager import TaskManager
 from src.inference.ai_worker import AIWorker
 from src.crypto.cryptosystems import crear_cripto
+from src.crypto.lote import fuente_para_nodo
 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,8 +22,13 @@ class ComplexNode:
 
         # Par de llaves del nodo (primos aleatorios de 40 dígitos). Algoritmo: 'rsa' o 'elgamal'
         algo = algo or os.environ.get("CRYPTO_ALGO", "rsa")
-        self.crypto = crear_cripto(algo)
-        logging.info(f"[CRYPTO] Nodo {node_id}: llaves {self.crypto.algo.upper()} generadas")
+        # p y q se toman del lote de primos hallados (primos.txt), eligiéndolos con la fecha
+        fuente, detalle = fuente_para_nodo(node_id)
+        if fuente is None:
+            logging.warning(f"[CRYPTO] Sin lote de primos ({detalle}); se generan primos nuevos")
+        self.crypto = crear_cripto(algo, fuente=fuente)
+        origen = f"del {detalle}" if fuente is not None else "generados al vuelo"
+        logging.info(f"[CRYPTO] Nodo {node_id}: llaves {self.crypto.algo.upper()} con primos {origen}")
 
         self.ai_worker = AIWorker(model_name=f"model_{node_id}")
         self.messaging = MessageService(host, port, self.handle_message, self.crypto)
